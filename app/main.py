@@ -9,3 +9,8 @@ async def main():
 @app.get("/vicky")
 async def me():
     return{"data":"Hey guys I am vicky and I am making an app that can help to the CAT ASPIRANT FOR CRACKING THE CAT"}
+
+@app.get("/dream")
+async def me():
+    return{"data":"lets fucking start from tomorrow"}
+
