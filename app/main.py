@@ -14,3 +14,6 @@ async def me():
 async def me():
     return{"data":"lets fucking start from tomorrow"}
 
+@app.get("/trip")
+async def trip():
+    return{"data":"sry for everything dude we will gonna crush 30 video in next 2days to start a strong comeback"}
