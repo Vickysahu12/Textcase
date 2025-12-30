@@ -1,19 +1,21 @@
-from fastapi import FastAPI
+from fastapi import FastAPI 
+from contextlib import asynccontextmanager
+from app.db.config import create_tables
+# from app.account.models import User,RefreshToken
+from app.account.routers import router as account_router
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app:FastAPI):
+    create_tables()
+    yield
 
-@app.get("/")
+app = FastAPI(lifespan=lifespan)
+app.include_router(account_router)
+
+@app.get("/me")
 async def main():
-    return {"data":"creating a new project named Textcasepro"}
+     return{
+        "me":"Hey Guys I am vickyyy",
+        "dream":"I want to be an entreprenuer"
+    }
 
-@app.get("/vicky")
-async def me():
-    return{"data":"Hey guys I am vicky and I am making an app that can help to the CAT ASPIRANT FOR CRACKING THE CAT"}
-
-@app.get("/dream")
-async def me():
-    return{"data":"lets fucking start from tomorrow"}
-
-@app.get("/trip")
-async def trip():
-    return{"data":"sry for everything dude we will gonna crush 30 video in next 2days to start a strong comeback"}
