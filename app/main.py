@@ -23,3 +23,8 @@ async def me():
      return{
           "vicky":"Hyy guys I am vicky you are seeing the richest person of odisha"
      }
+
+async def vicky():
+     return{
+          "vicky":"Hyy guys I am vicky you are seeing the richest person of odisha"
+     }
