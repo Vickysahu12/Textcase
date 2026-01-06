@@ -18,3 +18,10 @@ async def main():
         "me":"Hey Guys I am vickyyy",
         "dream":"I want to be an entreprenuer and crack the cat 2026"
     }
+
+@app.get("/target")
+async def main():
+     return{
+        "target1":"Crack the cat with 99.54 percentile",
+        "target2":"Launch the startup and grow it to atleast 10k user and 1k paying user"
+    }
