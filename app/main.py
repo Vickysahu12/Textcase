@@ -25,3 +25,9 @@ async def main():
         "target1":"Crack the cat with 99.54 percentile",
         "target2":"Launch the startup and grow it to atleast 10k user and 1k paying user"
     }
+
+@app.get("/mine")
+async def main():
+     return{
+        "target1":"Just phodna hai CAT kuch bhi karke with 99.54percentile"
+    }
