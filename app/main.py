@@ -31,3 +31,9 @@ async def main():
      return{
         "target1":"Just phodna hai CAT kuch bhi karke with 99.54percentile"
     }
+
+@app.post("/")
+async def dream():
+     return{
+          "me":"This year Motto CAT and STARTUP"
+     }
