@@ -1,22 +1,34 @@
-from sqlmodel import SQLModel,create_engine,Session
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker, Session
+from typing import Generator
 import os
-from fastapi import Depends
-from typing import Annotated
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-db_path = os.path.join(BASE_DIR,"vicky.db")
-
+# --- Database path ---
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+db_path = os.path.join(BASE_DIR, "vicky.db")
 DATABASE_URL = f"sqlite:///{db_path}"
 
-engine = create_engine(DATABASE_URL, echo=True)
+# --- Engine ---
+engine = create_engine(
+    DATABASE_URL, echo=True, connect_args={"check_same_thread": False}
+)
 
+# --- Base for models ---
+Base = declarative_base()
+
+# --- Session ---
+SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+
+def get_session() -> Generator[Session, None, None]:
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# --- Create tables ---
 def create_tables():
-    print("Tables Created....")
-    SQLModel.metadata.create_all(engine)
-
-def get_session():
-    with Session(engine) as session:
-        yield session
-
-SessionDep = Annotated[Session,Depends(get_session)]
+    from app.account.models import User
+    from app.converter.models import UserCredits, APIKey, CreditRequest
+    print("Creating tables...")
+    Base.metadata.create_all(bind=engine)

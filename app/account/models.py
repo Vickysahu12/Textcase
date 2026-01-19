@@ -1,30 +1,38 @@
-from sqlmodel import SQLModel,Field,UniqueConstraint,table
-from datetime import datetime,timezone
+from sqlmodel import SQLModel, Field
+from datetime import datetime, timezone
 
+# --- Base schemas for Pydantic ---
 class UserBase(SQLModel):
-    email:str
-    name:str
-    is_active:bool = True
-    is_admin:bool = Field(default=False)
+    email: str
+    name: str
+    is_active: bool = True
+    is_admin: bool = False
 
 class UserCreate(UserBase):
-    password:str
+    password: str  # plain password for creation
 
 class UserOut(UserBase):
     id: int
 
-class User(UserBase, table=True):
-    __table_args__ = (UniqueConstraint("email"),)
-    id: int = Field(primary_key=True)
-    hashed_password: str
-    is_verified: bool = False
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+# --- SQLModel ORM Table ---
+class User(SQLModel, table=True):
+    __tablename__ = "user"
+
+    id: int = Field(default=None, primary_key=True)
+    email: str = Field(index=True, nullable=False, unique=True)
+    name: str = Field(nullable=False)
+    hashed_password: str = Field(nullable=False)
+    is_active: bool = Field(default=True)
+    is_admin: bool = Field(default=False)
+    is_verified: bool = Field(default=False)
+
 
 class RefreshToken(SQLModel, table=True):
-    id:int = Field(default=None, primary_key=True)
-    user_id: int = Field(foreign_key="user.id")
-    token: str
-    expires_at: datetime
+    __tablename__ = "refresh_token"
+
+    id: int = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id", nullable=False, index=True)
+    token: str = Field(nullable=False, index=True)
+    expires_at: datetime = Field(nullable=False)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    revoked: bool = False
+    revoked: bool = Field(default=False)
